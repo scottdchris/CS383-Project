@@ -4,20 +4,12 @@
 
 import random
 
-# load card sprite - 949x392 - source: jfitz.com
-# CARD_SIZE = (73, 98)
-# CARD_CENTER = (36.5, 49)
-# card_images = simplegui.load_image("http://commondatastorage.googleapis.com/codeskulptor-assets/cards.jfitz.png")
-
-# CARD_BACK_SIZE = (71, 96)
-# CARD_BACK_CENTER = (35.5, 48)
-# card_back = simplegui.load_image("http://commondatastorage.googleapis.com/codeskulptor-assets/card_back.png")
-
 # initialize global variables
 in_play = False
 message = ""
 outcome = ""
 score = 0
+handsWon = 0
 popped = []
 player = []
 dealer = []
@@ -46,11 +38,6 @@ class Card:
 
     def get_rank(self):
         return self.rank
-
-    # def draw(self, canvas, pos):
-    #     card_loc = (CARD_CENTER[0] + CARD_SIZE[0] * RANKS.index(self.rank), 
-    #                 CARD_CENTER[1] + CARD_SIZE[1] * SUITS.index(self.suit))
-    #     canvas.draw_image(card_images, card_loc, CARD_SIZE, [pos[0] + CARD_CENTER[0], pos[1] + CARD_CENTER[1]], CARD_SIZE)
         
 # Hand class used for adding card objects from Deck() and for getting the value of hands
 class Hand:
@@ -77,14 +64,6 @@ class Hand:
             if rank == 'A' and value <= 11:
                 value += 10
         return value
-    
-    # def draw(self, canvas, p):
-    #     pos = p
-    #     for card in self.player_hand:
-    #         card.draw(canvas, p)
-    #         pos[0] = pos[0] + 90
-    #     if in_play == True:
-    #         canvas.draw_image(card_back, CARD_BACK_CENTER, CARD_BACK_SIZE, [115.5,184], CARD_BACK_SIZE)
         
 # Deck class used for re-shuffling between hands and giving card objects to Hand as called
 class Deck:
@@ -130,9 +109,9 @@ def deal():
         player.add_card(deck.deal_card())
         dealer.add_card(deck.deal_card())
         message = "Here is the new hand."
-        print message
-        print "Dealer: %s= %s" % (dealer, dealer.get_value())
-        print "Player: %s= %s" % (player, player.get_value())
+        # print message
+        # print "Dealer: %s= %s" % (dealer, dealer.get_value())
+        # print "Player: %s= %s" % (player, player.get_value())
     in_play = True
     outcome = ""
 
@@ -147,11 +126,11 @@ def hit():
             message = "Player busted! You Lose! Play again?"
             # score -= 1
             outcome = "Dealer: " + str(dealer.get_value()) + "  Player: " + str(player.get_value())
-            print "Outcome: " + outcome
+            # print "Outcome: " + outcome
 
 def stand():
     # hits dealer until >=17 or busts. Determines winner of hand and adjusts score, game state, and messages
-    global in_play, score, message, outcome
+    global in_play, score, message, outcome, handsWon
     if in_play == False:
         message = "The hand is already over. Deal again."
         print message
@@ -161,6 +140,7 @@ def stand():
         if dealer.get_value() > 21:
             message = "Dealer busted. You win! Play again?"
             score += 1
+            handsWon += 1
             in_play = False
             
         elif dealer.get_value() > player.get_value():
@@ -176,51 +156,24 @@ def stand():
         elif dealer.get_value() < player.get_value():
             message = "You win! Play again?"
             score += 1
+            handsWon += 1
             in_play = False
             
         outcome = "Dealer: " + str(dealer.get_value()) + "  Player: " + str(player.get_value())
-        print outcome
+        # print outcome
         
-# def exit():
-#     frame.stop()
-    
-# draw handler
-# def draw(canvas):
-#     canvas.draw_text("Blackjack", [270,50], 48, "Yellow")
-#     canvas.draw_text("Score : " + str(score), [80,520], 36, "Black")
-#     canvas.draw_text("Dealer :", [80,110], 30, "Black")
-#     canvas.draw_text("Player :", [80,300], 30, "Black")
-#     canvas.draw_text(message, [200,480], 26, "Black")
-#     canvas.draw_text(outcome, [80,560], 28, "White")
-#     dealer.draw(canvas, [80,135])
-#     player.draw(canvas, [80,325])
-    
-
-# initialization frame
-# frame = simplegui.create_frame("Blackjack", 700, 600)
-# frame.set_canvas_background("Green")
-
-# buttons and canvas callback
-# frame.add_button("Deal", deal, 200)
-# frame.add_button("Hit", hit, 200)
-# frame.add_button("Stand", stand, 200)
-# frame.add_button("Exit", exit, 200)
-# frame.set_draw_handler(draw)
-
-# deals initial hand
-# deal()
-
-# get things rolling
-# frame.start()
 
 #Agent Below
 
-for hands in range(25):
+for hands in range(10000):
     deal()
     while in_play:
-        if player.get_value()<17:
+        if player.get_value()<14:
             hit()
         else:
-            in_play = False
-            outcome = "Dealer: " + str(dealer.get_value()) + "  Player: " + str(player.get_value())
-            print "Outcome: " + outcome
+            stand()
+            # in_play = False
+            # outcome = "Dealer: " + str(dealer.get_value()) + "  Player: " + str(player.get_value())
+            # print "Outcome: " + outcome
+
+print handsWon
