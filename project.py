@@ -165,15 +165,23 @@ def stand():
 
 #Agent Below
 
-for hands in range(10000):
+threshold = 14
+for hands in range(1000000):
     deal()
     while in_play:
-        if player.get_value()<14:
+        if player.get_value()<threshold:
             hit()
         else:
             stand()
-            # in_play = False
             # outcome = "Dealer: " + str(dealer.get_value()) + "  Player: " + str(player.get_value())
             # print "Outcome: " + outcome
+    
+    # if (player.get_value() > 21) or (dealer.get_value()>21):
+    #     threshold -= 1.0/(hands+1)
+    # if (dealer.get_value() > player.get_value()) and(dealer.get_value()<=21):
+    #     threshold += 1.0/(hands+1)
+
+    
+# print threshold
 
 print handsWon
