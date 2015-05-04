@@ -2,6 +2,9 @@
 # CS 383 Artificial Intelligence
 # Final Project - Blackjack Agent
 
+#Refernces:
+#http://www.codeskulptor.org/#user26_ZvPjz7GLuE8FuyP.py
+
 import random
 
 # initialize global variables
@@ -165,17 +168,17 @@ def stand():
 
 #Agent Below
 
-threshold = 14
-for hands in range(1000000):
+threshold = 13.8975
+for hands in range(100000):
     deal()
+    ran = random.random()
     while in_play:
-        if player.get_value()<threshold:
+        if player.get_value()+ran<threshold:
             hit()
         else:
             stand()
-            # outcome = "Dealer: " + str(dealer.get_value()) + "  Player: " + str(player.get_value())
-            # print "Outcome: " + outcome
     
+    #Learn Optimal Threshold
     # if (player.get_value() > 21) or (dealer.get_value()>21):
     #     threshold -= 1.0/(hands+1)
     # if (dealer.get_value() > player.get_value()) and(dealer.get_value()<=21):
